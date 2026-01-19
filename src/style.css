@@ -1,6 +1,8 @@
 #root {
-    --theme-bg-primary: #333;
+    --theme-bg-primary: #242424;
+    --theme-canvas-primary: #323136;
     --theme-text-primary: #fff;
+    --theme-border-solid: #4b4953;
 }
 
 html {
@@ -18,11 +20,18 @@ header {
     text-align: center;
 }
 
+h1 {
+    margin: 0;
+}
+
 #canvas__main {
     display: block;
-    width: 100%;
-    height: auto;
     aspect-ratio: 1/1;
+    background-color: var(--theme-canvas-primary);
+    border: solid 1px var(--theme-border-solid);
+    border-radius: 8px;
+    width: min(80dvh, 80dvw);
+    height: min(80dvw, 80dvh);
 }
 
 main {
