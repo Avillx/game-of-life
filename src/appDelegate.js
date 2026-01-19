@@ -14,9 +14,7 @@ export class AppDelegate {
         this._gameManager = new GameManager()
         this._sizes = {
             rectHeight: 0,
-            rectWidth: 0,
-            hElementsCount: 30,
-            vElementsCount: 30,
+            rectWidth: 0
         }
     }
 
