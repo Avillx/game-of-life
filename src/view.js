@@ -33,7 +33,7 @@ export class View {
         }
     }
 
-    screenPointToCellIdx(xPos, yPos) {
+    canvasPointToCellIdx(xPos, yPos) {
 
         const rowIdx = Math.floor(xPos / this._rectSize.width)
         const colIdx = Math.floor(yPos / this._rectSize.height)

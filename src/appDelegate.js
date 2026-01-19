@@ -52,7 +52,14 @@ export class AppDelegate {
 
     _onClick(event) {
 
-        const idxs = this._view.screenPointToCellIdx(event.pageX, event.pageY)
+        const canvasRect = this._canvas.getBoundingClientRect()
+
+        const canvasXPoint = event.pageX - canvasRect.left
+        const canvasYPoint = event.pageY - canvasRect.top
+
+        if (canvasXPoint < 0 || canvasYPoint < 0) return
+
+        const idxs = this._view.canvasPointToCellIdx(canvasXPoint, canvasYPoint)
         this._gameManager.onCellClick(idxs.rowIdx, idxs.colIdx)
     }
 
