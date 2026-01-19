@@ -1,11 +1,12 @@
 'use strict'
+import { GameManager } from "./gameManager.js"
 
 let instance
 
 document.addEventListener('DOMContentLoaded', () => {
-    GameOfLife.getInstace().init()
+    AppDelegate.getInstace().init()
 
-    GameOfLife.getInstace().run()
+    AppDelegate.getInstace().run()
 })
 
 document.addEventListener('beforeunload', () => {
@@ -14,14 +15,16 @@ document.addEventListener('beforeunload', () => {
     instance = null
 })
 
-class GameOfLife {
+class AppDelegate {
     _resizeObserver
     _canvas
     _sizes
+    _gameManager
 
     constructor() {
         this._resizeObserver = null
         this._canvas = null
+        this._gameManager = new GameManager()
         this._sizes = {
             rectHeight: 0,
             rectWidth: 0,
@@ -33,7 +36,7 @@ class GameOfLife {
     static getInstace() {
         if (instance) return instance
 
-        instance = new GameOfLife()
+        instance = new AppDelegate()
         return instance
     }
 
@@ -46,6 +49,9 @@ class GameOfLife {
     run() {
         const loop = () => {
 
+
+
+            requestAnimationFrame(loop())
         }
         loop()
     }
