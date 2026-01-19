@@ -74,15 +74,20 @@ export class AppDelegate {
             rectWidth: canvasRect.width / COUNT_OF_ROWS
         })
 
+        this._view.setCanvasSize({
+            height: canvasRect.height,
+            width: canvasRect.width
+        })
+
     }
 
     init() {
 
         this._initCanvas()
-        this._initResizeManager()
         this._gameManager.init()
         this._view.init(this._canvas.getContext("2d"), this._gameManager.getField(), { rectHeight: null, rectWidth: null })
         this._initClickEvent()
+        this._initResizeManager()
     }
 
     _initClickEvent() {
@@ -98,12 +103,11 @@ export class AppDelegate {
     _initResizeManager() {
 
         this._resizeObserver = new ResizeObserver(() => {
-
-            console.log("resized")
             this._onResize()
         })
 
         this._resizeObserver.observe(this._canvas)
+        this._onResize()
     }
 
     _resizeObserver

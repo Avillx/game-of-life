@@ -59,7 +59,6 @@ export class GameManager {
     onCellClick(rowIdx, colIdx) {
 
         this._field.at(rowIdx)?.at(colIdx)?.toggleState()
-        console.log(`cell at x:${rowIdx} y:${colIdx} force toggled`)
     }
 
     _IsTurning(cell, neighboors) {
