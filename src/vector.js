@@ -1,6 +1,6 @@
 export class Vector {
 
-    constructor() {
+    constructor(initalCopacity) {
 
         this._size = initalCopacity ? initalCopacity : 0
         this._elements = new Array(this._size)
@@ -46,6 +46,19 @@ export class Vector {
     removeAt(idx) {
 
         this._elements.splice(idx, 1)
+    }
+
+    release() {
+        for (let i = 0; i < this._size; i++) {
+            if (typeof this._elements[i]['relese'] === 'function') {
+
+                this._elements[i].release()
+            }
+
+            this._elements[i] = null
+        }
+        this._elements = null
+        this._size = null
     }
 
     _elements = []
