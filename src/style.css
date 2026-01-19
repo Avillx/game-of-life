@@ -1,0 +1,38 @@
+#root {
+    --theme-bg-primary: #333;
+    --theme-text-primary: #fff;
+}
+
+html {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    margin: 0;
+    height: 100dvh;
+    background-color: var(--theme-bg-primary);
+    color: var(--theme-text-primary);
+}
+
+header {
+    text-align: center;
+}
+
+#canvas__main {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    text-align: end;
+}
