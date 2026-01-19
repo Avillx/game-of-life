@@ -12,6 +12,7 @@ export class View {
     }
 
     init(ctx2d, field, initialRectSize) {
+
         this._field = field
 
         this._rectSize = {
@@ -30,6 +31,14 @@ export class View {
             height: rectSize.rectHeight,
             width: rectSize.rectWidth
         }
+    }
+
+    screenPointToCellIdx(xPos, yPos) {
+
+        const rowIdx = Math.floor(xPos / this._rectSize.width)
+        const colIdx = Math.floor(yPos / this._rectSize.height)
+
+        return { rowIdx: rowIdx, colIdx: colIdx }
     }
 
     render() {

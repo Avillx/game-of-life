@@ -5,16 +5,12 @@ import { COUNT_OF_COLUMNS, COUNT_OF_ROWS } from "./defines.js"
 let instance
 
 export class AppDelegate {
-    _resizeObserver
-    _canvas
-    _gameManager
-    _view
-
     constructor() {
         this._resizeObserver = null
         this._canvas = null
         this._gameManager = new GameManager()
         this._view = new View()
+        this._clickEventListener = null
 
     }
 
@@ -25,34 +21,39 @@ export class AppDelegate {
         return instance
     }
 
-    get2dContext() {
-
-        return this._canvas.getContext("2d");
-    }
-
-    init() {
-
-        this._initCanvas()
-        this._initResizeManager()
-        this._gameManager.init()
-        this._view.init(this.get2dContext(), this._gameManager.getField(), { rectHeight: null, rectWidth: null })
-    }
-
     run() {
-        const loop = () => {
+
+        let isRun = true
+
+        const updateLoop = () => {
 
             this._gameManager.update()
-            this._view.render()
-
-            requestAnimationFrame(loop)
         }
-        loop()
+
+        setInterval(updateLoop, 1200)
+
+        const renderLoop = () => {
+
+            this._view.render()
+            requestAnimationFrame(renderLoop)
+        }
+
+        renderLoop()
+
     }
 
     release() {
 
         this._resizeObserver = null
         this._canvas = null
+        document.removeEventListener('pointerup', this._clickEventListener)
+        this._clickEventListener = null
+    }
+
+    _onClick(event) {
+
+        const idxs = this._view.screenPointToCellIdx(event.pageX, event.pageY)
+        this._gameManager.onCellClick(idxs.rowIdx, idxs.colIdx)
     }
 
     _onResize() {
@@ -66,6 +67,20 @@ export class AppDelegate {
             rectWidth: canvasRect.width / COUNT_OF_ROWS
         })
 
+    }
+
+    init() {
+
+        this._initCanvas()
+        this._initResizeManager()
+        this._gameManager.init()
+        this._view.init(this._canvas.getContext("2d"), this._gameManager.getField(), { rectHeight: null, rectWidth: null })
+        this._initClickEvent()
+    }
+
+    _initClickEvent() {
+        this._clickEventListener = this._onClick.bind(this)
+        document.addEventListener('pointerup', this._clickEventListener)
     }
 
     _initCanvas() {
@@ -83,4 +98,10 @@ export class AppDelegate {
 
         this._resizeObserver.observe(this._canvas)
     }
+
+    _resizeObserver
+    _canvas
+    _gameManager
+    _view
+    _clickEventListener
 }
