@@ -4,6 +4,7 @@ import { COUNT_OF_COLUMNS, COUNT_OF_ROWS } from "./defines.js"
 export class GameManager {
     _field
     _appDelegate
+    _aliveCellProjections
 
     constructor(appDelegate) {
 
@@ -15,7 +16,14 @@ export class GameManager {
         return this._field
     }
 
+    getAliveCellProjections() {
+
+        return this._aliveCellProjections
+    }
+
     init() {
+
+        this._aliveCellProjections = new Vector(0)
         this._field = new Vector(COUNT_OF_ROWS)
 
         for (let rowIdx = 0; rowIdx < this._field.size(); rowIdx++) {
@@ -25,12 +33,13 @@ export class GameManager {
             for (let colIdx = 0; colIdx < row.size(); colIdx++) {
 
                 const cell = new Cell()
-                cell.init()
+                cell.init(rowIdx, colIdx)
                 row.set(colIdx, cell)
             }
         }
 
     }
+
 
     update() {
 
@@ -40,6 +49,7 @@ export class GameManager {
             for (let colIdx = 0; colIdx < row.size(); colIdx++) {
 
                 const cell = row.at(colIdx)
+
                 const neighboors = new Vector(8)
 
                 neighboors.set(0, this._field.at(rowIdx + 1)?.at(colIdx - 1))
@@ -51,14 +61,31 @@ export class GameManager {
                 neighboors.set(6, this._field.at(rowIdx - 1)?.at(colIdx))
                 neighboors.set(7, this._field.at(rowIdx - 1)?.at(colIdx + 1))
 
-                if (this._IsTurning(cell, neighboors)) cell.toggleState()
+                if (this._IsTurning(cell, neighboors)) {
+
+                    this._turnCell(rowIdx, colIdx)
+                }
             }
         }
     }
 
     onCellClick(rowIdx, colIdx) {
 
-        this._field.at(rowIdx)?.at(colIdx)?.toggleState()
+        this._turnCell(rowIdx, colIdx)
+    }
+
+    _turnCell(rowIdx, colIdx) {
+
+        const cell = this._field.at(rowIdx).at(colIdx)
+        cell.toggleState()
+
+        if (cell.getState()) {
+
+            this._aliveCellProjections.push(cell.getProjection())
+        } else {
+
+            this._aliveCellProjections.remove(cell.getProjection())
+        }
     }
 
     _IsTurning(cell, neighboors) {
@@ -85,22 +112,33 @@ export class GameManager {
 
     release() {
 
-        _field.release()
+        this._aliveCellProjections.release()
+        this._aliveCellProjections = null
+
+        this._field.release()
+        this._field = null
     }
 }
 
 class Cell {
-    _state
 
     constructor() {
 
+        this._projection = null
         this._state = null
     }
 
-    init() {
+    init(rowIdx, colIdx) {
 
+        this._projection = { row: rowIdx, col: colIdx }
         this._state = false
     }
+
+    getProjection() {
+
+        return this._projection
+    }
+
 
     toggleState() {
 
@@ -114,6 +152,10 @@ class Cell {
 
     release() {
 
+        this._projection = null
         this._state = null
     }
+
+    _state
+    _projection
 }

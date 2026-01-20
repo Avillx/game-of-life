@@ -133,7 +133,14 @@ export class AppDelegate {
 
         this._initCanvas()
         this._gameManager.init()
-        this._view.init(this._canvas.getContext("2d"), this._gameManager.getField(), { rectHeight: null, rectWidth: null })
+
+        this._view.init(
+
+            this._canvas.getContext("2d"),
+            this._gameManager.getAliveCellProjections(),
+            { rectHeight: null, rectWidth: null }
+        )
+
         this._initClickEvent()
         this._initResizeManager()
         this._controlPanel.init(this)
