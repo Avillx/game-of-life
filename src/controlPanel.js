@@ -25,6 +25,8 @@ export class ControlPanel {
         this._speedDecreaseButton.addEventListener('click', this._pauseListener)
 
         this._speedValueSpan = document.getElementById("time-controller__speed-span")
+
+        this._displaySpeed()
     }
 
     _increaseSpeed() {
