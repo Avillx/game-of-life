@@ -5,22 +5,16 @@ export class ControlPanel {
 
         this._delegate = null
 
-        this._pauseButton = null;
         this._speedIncreaseButton = null
         this._speedDecreaseButton = null
         this._speedValueSpan = null
 
         this._increaseListener = null
         this._decreaseListener = null
-        this._pauseListener = null
     }
 
     init(delegate) {
         this._delegate = delegate
-
-        this._pauseButton = document.getElementById("time-controller__pause")
-        this._pauseListener = this._togglePause.bind(this)
-        this._pauseButton.addEventListener('click', this._pauseListener)
 
         this._speedIncreaseButton = document.getElementById("time-controller__speed-plus")
         this._increaseSpeed = this._increaseSpeed.bind(this)
@@ -31,13 +25,6 @@ export class ControlPanel {
         this._speedDecreaseButton.addEventListener('click', this._pauseListener)
 
         this._speedValueSpan = document.getElementById("time-controller__speed-span")
-    }
-
-    _togglePause() {
-
-        const isUpdating = this._delegate.isUpdating()
-        this._delegate.setUpdating(!isUpdating)
-        this._pauseButton.textContent = isUpdating ? "||" : ">"
     }
 
     _increaseSpeed() {
@@ -62,9 +49,7 @@ export class ControlPanel {
     release() {
         this._delegate = null
 
-        this._pauseButton.removeEventListener('click', this._pauseListener)
-        this._pauseButton = null;
-        this._pauseListener = null
+
 
 
         this._speedIncreaseButton.removeEventListener('click', this._increaseListener)
@@ -80,12 +65,10 @@ export class ControlPanel {
 
     _delegate
 
-    _pauseButton
     _speedIncreaseButton
     _speedDecreaseButton
     _speedValueSpan
 
     _increaseListener
     _decreaseListener
-    _pauseListener
 }

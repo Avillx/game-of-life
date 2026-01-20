@@ -1,7 +1,7 @@
 import { GameManager } from "./gameManager.js"
 import { View } from "./view.js"
 import { ControlPanel } from "./controlPanel.js"
-import { PRELOAD_FIGURE, COUNT_OF_COLUMNS, COUNT_OF_ROWS, DEFAULT_TICK_RATE } from "./defines.js"
+import { PRELOAD_FIGURE, COUNT_OF_COLUMNS, COUNT_OF_ROWS, MAX_SPEED, DEFAULT_SPEED } from "./defines.js"
 import { Vector } from "./vector.js"
 
 let instance
@@ -9,13 +9,15 @@ let instance
 export class AppDelegate {
 
     constructor() {
+
+        this._max_speed = MAX_SPEED
         this._isUpdating = false
         this._resizeObserver = null
         this._canvas = null
         this._gameManager = new GameManager()
         this._view = new View()
         this._clickEventListener = null
-        this._updateRate = DEFAULT_TICK_RATE
+        this._speed = null
         this._controlPanel = new ControlPanel()
     }
 
@@ -29,24 +31,22 @@ export class AppDelegate {
 
     run() {
 
-        this._isUpdating = false
+        this._isUpdating = true
         let lastTime = performance.now();
-        let timeToTick = this._updateRate
+        let timeToTick = this._speed
 
         const loop = () => {
+            const currentTime = performance.now();
+            const delta = currentTime - lastTime
 
-            if (this._isUpdating) {
-                const currentTime = performance.now();
-                const delta = currentTime - lastTime
+            if (this._isUpdating && timeToTick <= 0) {
 
-                if (timeToTick <= 0) {
-
-                    this._gameManager.update()
-                    timeToTick = this._updateRate
-                }
-                timeToTick -= delta
-                lastTime = performance.now()
+                this._gameManager.update()
+                timeToTick = this._max_speed - this._speed
             }
+
+            timeToTick -= delta
+            lastTime = performance.now()
 
             this._view.render()
 
@@ -75,7 +75,7 @@ export class AppDelegate {
         this._controlPanel.release()
         this._controlPanel = null
 
-        this._updateRate = null
+        this._speed = null
         this._isUpdating = null
     }
 
@@ -91,12 +91,15 @@ export class AppDelegate {
 
     getSpeed() {
 
-        return this._updateRate
+        return this._speed
     }
 
     setSpeed(value) {
 
-        this._updateRate = value
+        if (value < 0 || value > this._max_speed) return
+        this._speed = value
+
+        this._isUpdating = this._speed > 0 ? true : false
     }
 
     _onClick(event) {
@@ -109,6 +112,11 @@ export class AppDelegate {
         if (canvasXPoint < 0 || canvasYPoint < 0) return
 
         const idxs = this._view.canvasPointToCellIdx(canvasXPoint, canvasYPoint)
+
+        if ((COUNT_OF_COLUMNS <= idxs.colIdx || idxs.rowIdx < 0) ||
+            (COUNT_OF_ROWS <= idxs.rowIdx || idxs.rowIdx < 0))
+            return
+
         this._gameManager.onCellClick(idxs.rowIdx, idxs.colIdx)
     }
 
@@ -134,6 +142,8 @@ export class AppDelegate {
 
         this._initCanvas()
         this._gameManager.init()
+
+        this.setSpeed(DEFAULT_SPEED)
 
         if (PRELOAD_FIGURE) {
 
@@ -181,5 +191,6 @@ export class AppDelegate {
     _gameManager
     _view
     _clickEventListener
-    _updateRate
+    _speed
+    _max_speed
 }

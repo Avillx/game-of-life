@@ -1,8 +1,9 @@
 export const COUNT_OF_COLUMNS = 60
 export const COUNT_OF_ROWS = 60
 export const CELLS_COLOR = "#7e8bed"
-export const DEFAULT_TICK_RATE = 1200
-export const SPEED_CHANGE_STEP = 100
+export const MAX_SPEED = 100
+export const DEFAULT_SPEED = 60
+export const SPEED_CHANGE_STEP = 10
 export const PRELOAD_FIGURE = [
     { row: 2, col: 3 },
     { row: 2, col: 4 },
