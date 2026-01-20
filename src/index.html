@@ -16,7 +16,34 @@
         </h1>
     </header>
     <main>
-        <canvas id="canvas__main"></canvas>
+        <section class="time-controller__bar">
+            <div class="time-controller__section">
+                <div class="button">
+                    <span id="time-controller__speed-minus">
+                        <h2>-</h2>
+                    </span>
+                </div>
+                <span id="time-controller__speed-span">
+                    TimeSpeed: 1220
+                </span>
+                <div class="button">
+                    <span id="time-controller__speed-plus">
+                        <h2>+</h2>
+                    </span>
+                </div>
+            </div>
+            <div class="time-controller__section">
+                <span>
+                    Pause:
+                </span>
+                <div class="button" id="time-controller__pause">
+                    //
+                </div>
+            </div>
+        </section>
+        <section>
+            <canvas id="canvas__main"></canvas>
+        </section>
     </main>
     <footer>
         <span>made by Avill</span>

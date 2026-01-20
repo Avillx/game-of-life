@@ -1,21 +1,25 @@
 import { GameManager } from "./gameManager.js"
 import { View } from "./view.js"
+import { ControlPanel } from "./controlPanel.js"
 import { COUNT_OF_COLUMNS, COUNT_OF_ROWS, DEFAULT_TICK_RATE } from "./defines.js"
 
 let instance
 
 export class AppDelegate {
+
     constructor() {
+        this._isUpdating = false
         this._resizeObserver = null
         this._canvas = null
         this._gameManager = new GameManager()
         this._view = new View()
         this._clickEventListener = null
-        this._tickRate = DEFAULT_TICK_RATE
-
+        this._updateRate = DEFAULT_TICK_RATE
+        this._controlPanel = new ControlPanel()
     }
 
     static getInstace() {
+
         if (instance) return instance
 
         instance = new AppDelegate()
@@ -24,21 +28,27 @@ export class AppDelegate {
 
     run() {
 
+        this._isUpdating = true
         let lastTime = performance.now();
-        let timeToTick = this._tickRate
+        let timeToTick = this._updateRate
+
         const loop = () => {
-            const currentTime = performance.now();
-            const delta = currentTime - lastTime
 
-            if (timeToTick <= 0) {
+            if (this._isUpdating) {
+                const currentTime = performance.now();
+                const delta = currentTime - lastTime
 
-                this._gameManager.update()
-                timeToTick = this._tickRate
+                if (timeToTick <= 0) {
+
+                    this._gameManager.update()
+                    timeToTick = this._updateRate
+                }
+                timeToTick -= delta
+                lastTime = performance.now()
             }
-            timeToTick -= delta
 
             this._view.render()
-            lastTime = performance.now()
+
             requestAnimationFrame(loop)
         }
 
@@ -61,7 +71,31 @@ export class AppDelegate {
         this._view.release()
         this._view = null
 
-        this._tickRate = null
+        this._controlPanel.release()
+        this._controlPanel = null
+
+        this._updateRate = null
+        this._isUpdating = null
+    }
+
+    isUpdating() {
+
+        return this._isUpdating
+    }
+
+    setUpdating(value) {
+
+        this._isUpdating = value
+    }
+
+    getSpeed() {
+
+        return this._updateRate
+    }
+
+    setSpeed(value) {
+
+        this._updateRate = value
     }
 
     _onClick(event) {
@@ -102,9 +136,11 @@ export class AppDelegate {
         this._view.init(this._canvas.getContext("2d"), this._gameManager.getField(), { rectHeight: null, rectWidth: null })
         this._initClickEvent()
         this._initResizeManager()
+        this._controlPanel.init(this)
     }
 
     _initClickEvent() {
+
         this._clickEventListener = this._onClick.bind(this)
         document.addEventListener('pointerup', this._clickEventListener)
     }
@@ -125,9 +161,10 @@ export class AppDelegate {
     }
 
     _resizeObserver
+    _controlPanel
     _canvas
     _gameManager
     _view
     _clickEventListener
-    _tickRate
+    _updateRate
 }

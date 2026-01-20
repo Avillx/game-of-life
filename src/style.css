@@ -1,5 +1,7 @@
 #root {
     --theme-bg-primary: #242424;
+    --theme-bg-secondary: #383838;
+
     --theme-canvas-primary: #323136;
     --theme-text-primary: #fff;
     --theme-border-solid: #4b4953;
@@ -20,7 +22,8 @@ header {
     text-align: center;
 }
 
-h1 {
+h1,
+h2 {
     margin: 0;
 }
 
@@ -32,11 +35,45 @@ h1 {
     border-radius: 8px;
     width: min(80dvh, 80dvw);
     height: min(80dvw, 80dvh);
+    cursor: pointer;
+}
+
+.time-controller__section {
+    display: flex;
+    flex-direction: row;
+    margin: 0 30px;
+}
+
+.time-controller__section>* {
+    align-content: center;
+    margin: 0 10px;
+}
+
+.time-controller__bar {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin: 20px;
+}
+
+.button {
+    border-radius: 8px;
+    border: solid 1px var(--theme-border-solid);
+    padding: 3px;
+    background-color: var(--theme-bg-secondary);
+    user-select: none;
+    cursor: pointer;
+}
+
+section {
+    display: flex;
+    justify-content: center;
 }
 
 main {
     display: flex;
     justify-content: center;
+    flex-direction: column;
 }
 
 footer {
