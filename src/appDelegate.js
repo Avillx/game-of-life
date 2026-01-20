@@ -48,11 +48,18 @@ export class AppDelegate {
 
     release() {
 
+        this._resizeObserver.unobserve(this._canvas)
         this._resizeObserver = null
+
         this._canvas = null
         document.removeEventListener('pointerup', this._clickEventListener)
         this._clickEventListener = null
 
+        this._gameManager.release()
+        this._gameManager = null
+
+        this._view.release()
+        this._view = null
 
         this._tickRate = null
     }
