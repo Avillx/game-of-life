@@ -40,6 +40,14 @@ export class GameManager {
 
     }
 
+    setAsset(config) {
+
+        for (let i = 0; i < config.size(); i++) {
+
+            const projection = config.at(i)
+            this._turnCell(projection.row, projection.col)
+        }
+    }
 
     update() {
 
@@ -139,6 +147,9 @@ class Cell {
         return this._projection
     }
 
+    setState(value) {
+        this._state = value
+    }
 
     toggleState() {
 

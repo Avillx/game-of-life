@@ -38,6 +38,18 @@ export class Vector {
         return this._size
     }
 
+    static fromArray(arr) {
+
+        const newVector = new Vector(0)
+        for (let i = 0; i < arr.length; i++) {
+
+            newVector.pushBack(arr[i])
+        }
+
+        return newVector
+
+    }
+
     remove(element) {
 
         const idx = this._elements.indexOf(element)

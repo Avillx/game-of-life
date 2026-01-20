@@ -1,7 +1,8 @@
 import { GameManager } from "./gameManager.js"
 import { View } from "./view.js"
 import { ControlPanel } from "./controlPanel.js"
-import { COUNT_OF_COLUMNS, COUNT_OF_ROWS, DEFAULT_TICK_RATE } from "./defines.js"
+import { PRELOAD_FIGURE, COUNT_OF_COLUMNS, COUNT_OF_ROWS, DEFAULT_TICK_RATE } from "./defines.js"
+import { Vector } from "./vector.js"
 
 let instance
 
@@ -28,7 +29,7 @@ export class AppDelegate {
 
     run() {
 
-        this._isUpdating = true
+        this._isUpdating = false
         let lastTime = performance.now();
         let timeToTick = this._updateRate
 
@@ -133,6 +134,13 @@ export class AppDelegate {
 
         this._initCanvas()
         this._gameManager.init()
+
+        if (PRELOAD_FIGURE) {
+
+            const initFigure = Vector.fromArray(PRELOAD_FIGURE)
+            this._gameManager.setAsset(initFigure)
+        }
+
 
         this._view.init(
 
