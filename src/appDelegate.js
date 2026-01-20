@@ -1,6 +1,6 @@
 import { GameManager } from "./gameManager.js"
 import { View } from "./view.js"
-import { COUNT_OF_COLUMNS, COUNT_OF_ROWS } from "./defines.js"
+import { COUNT_OF_COLUMNS, COUNT_OF_ROWS, DEFAULT_TICK_RATE } from "./defines.js"
 
 let instance
 
@@ -11,6 +11,7 @@ export class AppDelegate {
         this._gameManager = new GameManager()
         this._view = new View()
         this._clickEventListener = null
+        this._tickRate = DEFAULT_TICK_RATE
 
     }
 
@@ -23,22 +24,25 @@ export class AppDelegate {
 
     run() {
 
-        let isRun = true
+        let lastTime = performance.now();
+        let timeToTick = this._tickRate
+        const loop = () => {
+            const currentTime = performance.now();
+            const delta = currentTime - lastTime
 
-        const updateLoop = () => {
+            if (timeToTick <= 0) {
 
-            this._gameManager.update()
-        }
-
-        setInterval(updateLoop, 1200)
-
-        const renderLoop = () => {
+                this._gameManager.update()
+                timeToTick = this._tickRate
+            }
+            timeToTick -= delta
 
             this._view.render()
-            requestAnimationFrame(renderLoop)
+            lastTime = performance.now()
+            requestAnimationFrame(loop)
         }
 
-        renderLoop()
+        loop()
 
     }
 
@@ -48,6 +52,9 @@ export class AppDelegate {
         this._canvas = null
         document.removeEventListener('pointerup', this._clickEventListener)
         this._clickEventListener = null
+
+
+        this._tickRate = null
     }
 
     _onClick(event) {
@@ -115,4 +122,5 @@ export class AppDelegate {
     _gameManager
     _view
     _clickEventListener
+    _tickRate
 }
